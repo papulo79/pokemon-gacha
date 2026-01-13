@@ -1,0 +1,296 @@
+:root {
+    --primary-color: #ff5350;
+    --secondary-color: #2a75bb;
+    --bg-dark: #121212;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-white: #f5f5f5;
+    --accent-yellow: #ffcb05;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.overlay-content h2 {
+    font-size: 4rem;
+    color: var(--accent-yellow);
+    text-shadow: 0 0 20px rgba(255, 203, 5, 0.4);
+    margin-bottom: 10px;
+}
+
+.legacy {
+    opacity: 0.4;
+    filter: grayscale(0.5);
+    border: 1px dashed rgba(255, 255, 255, 0.2) !important;
+}
+
+.mini-card.legacy::after {
+    content: "Pasado";
+    display: block;
+    font-size: 0.6rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.logo span {
+    color: var(--primary-color);
+}
+
+.inventory {
+    display: flex;
+    gap: 15px;
+}
+
+.ball-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.ball-count img {
+    width: 24px;
+    height: 24px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background: #e64a47;
+    transform: scale(1.05);
+}
+
+/* Pokemon Grid */
+.pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.pokemon-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pokemon-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-color);
+}
+
+.pokemon-card.new::before {
+    content: "¡NUEVO!";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--accent-yellow);
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    z-index: 10;
+}
+
+.pokemon-card img {
+    width: 150px;
+    height: 150px;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+}
+
+.pokemon-name {
+    font-size: 1.4rem;
+    text-transform: capitalize;
+    margin: 15px 0;
+}
+
+.capture-rate {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.capture-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.btn-capture {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.btn-capture:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-capture:hover:not(:disabled) {
+    background: var(--primary-color);
+}
+
+.btn-capture img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+}
+
+.modal-content {
+    background: #1a1a1a;
+    width: 90%;
+    max-width: 900px;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.mini-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.mini-card img {
+    width: 80px;
+}
+
+.mini-card p {
+    text-transform: capitalize;
+    font-size: 1rem;
+}
+
+/* Animations */
+@keyframes shake {
+    0% {
+        transform: translate(0, 0) rotate(0);
+    }
+
+    20% {
+        transform: translate(-10px, 0) rotate(-10deg);
+    }
+
+    40% {
+        transform: translate(10px, 0) rotate(10deg);
+    }
+
+    60% {
+        transform: translate(-10px, 0) rotate(-10deg);
+    }
+
+    80% {
+        transform: translate(10px, 0) rotate(10deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0);
+    }
+}
+
+.shaking {
+    animation: shake 0.5s infinite;
+}
+
+.shiny-effect {
+    filter: drop-shadow(0 0 15px gold) brightness(1.2);
+}

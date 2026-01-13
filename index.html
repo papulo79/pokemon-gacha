@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeGacha - Captura y Colecciona</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header: Inventario y Colección -->
+        <header>
+            <div class="logo">Poke<span>Gacha</span></div>
+            <div class="inventory" id="inventory">
+                <!-- Pokéballs irán aquí -->
+            </div>
+            <div class="actions">
+                <button id="btn-save" class="btn-secondary">Guardar</button>
+                <button id="btn-collection" class="btn-primary">Mi Colección</button>
+            </div>
+        </header>
+
+        <!-- Main Content: Encuentro -->
+        <main>
+            <section id="encounter-screen">
+                <h2>¡Han aparecido Pokémon salvajes!</h2>
+                <div id="pokemon-grid" class="pokemon-grid">
+                    <!-- 3 Pokémon aparecerán aquí -->
+                    <div class="pokeball-loading">Cargando encuentros...</div>
+                </div>
+                <button id="btn-skip" class="btn-skip">Omitir este encuentro</button>
+            </section>
+        </main>
+
+        <!-- Modal de Colección (Oculto por defecto) -->
+        <div id="collection-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Tu Colección</h2>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div id="collection-list" class="collection-grid">
+                    <!-- Lista de capturados -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay de Fin de Viaje (Celebración) -->
+        <div id="game-over-overlay">
+            <div class="overlay-content">
+                <h2>¡Viaje Completado!</h2>
+                <p>Has hecho un trabajo increíble capturando Pokémon.</p>
+                <div id="run-stats" style="margin-bottom: 25px; font-size: 1.2rem; color: var(--accent-yellow);"></div>
+                <button id="btn-restart" class="btn-primary">Iniciar un Nuevo Viaje</button>
+            </div>
+        </div>
+
+        <!-- Notificaciones -->
+        <div id="notifications"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
