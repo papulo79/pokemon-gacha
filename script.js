@@ -7,7 +7,7 @@ const GAME_STATE = {
         masterball: 0
     },
     collection: JSON.parse(localStorage.getItem('pokeCollection')) || [],
-    currentRunIds: [], // IDs capturados en este viaje
+    currentRunIds: JSON.parse(localStorage.getItem('pokeCurrentRun')) || [], // Persistir IDs del viaje
     currentEncounter: []
 };
 
@@ -195,6 +195,7 @@ function onCaptureSuccess(pokemon) {
 function saveGame(showNotify = true) {
     localStorage.setItem('pokeCollection', JSON.stringify(GAME_STATE.collection));
     localStorage.setItem('pokeInventory', JSON.stringify(GAME_STATE.inventory));
+    localStorage.setItem('pokeCurrentRun', JSON.stringify(GAME_STATE.currentRunIds));
     if (showNotify) {
         showNotification("¡Progreso guardado correctamente!");
     }
@@ -307,3 +308,4 @@ document.getElementById('btn-skip').onclick = () => {
 // Init
 updateUI();
 startNewEncounter();
+checkInventory();
