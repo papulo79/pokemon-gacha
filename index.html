@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokeGacha - Captura y Colecciona</title>
+    <title>PokeJourney - Captura y Colecciona</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,10 +14,7 @@
     <div id="app">
         <!-- Header: Inventario y Colección -->
         <header>
-            <div class="logo">Poke<span>Gacha</span></div>
-            <div class="inventory" id="inventory">
-                <!-- Pokéballs irán aquí -->
-            </div>
+            <div class="logo">Poke<span>Journey</span></div>
             <div class="actions">
                 <button id="btn-save" class="btn-secondary">Guardar</button>
                 <button id="btn-collection" class="btn-primary">Mi Colección</button>
@@ -32,6 +29,13 @@
                     <!-- 3 Pokémon aparecerán aquí -->
                     <div class="pokeball-loading">Cargando encuentros...</div>
                 </div>
+                
+                <div class="inventory-container">
+                    <div class="inventory" id="inventory">
+                        <!-- Pokéballs irán aquí como botones de acción -->
+                    </div>
+                </div>
+
                 <button id="btn-skip" class="btn-skip">Omitir este encuentro</button>
             </section>
         </main>

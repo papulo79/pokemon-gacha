@@ -1,4 +1,4 @@
-// PokeGacha Game Logic
+// PokeJourney Game Logic
 const GAME_STATE = {
     inventory: JSON.parse(localStorage.getItem('pokeInventory')) || {
         pokeball: 10,
@@ -8,7 +8,8 @@ const GAME_STATE = {
     },
     collection: JSON.parse(localStorage.getItem('pokeCollection')) || [],
     currentRunIds: JSON.parse(localStorage.getItem('pokeCurrentRun')) || [], // Persistir IDs del viaje
-    currentEncounter: []
+    currentEncounter: [],
+    selectedPokemonIndex: 0
 };
 
 const BALL_POWER = {
@@ -74,22 +75,36 @@ async function startNewEncounter() {
     const grid = document.getElementById('pokemon-grid');
     grid.innerHTML = '<div class="pokeball-loading">¡Buscando Pokémon...!</div>';
 
-    const ids = Array.from({ length: 3 }, () => Math.floor(Math.random() * 898) + 1);
-    const pokemons = await Promise.all(ids.map(id => fetchPokemon(id)));
+    const ids = new Set();
+    while (ids.size < 3) {
+        ids.add(Math.floor(Math.random() * 898) + 1);
+    }
+
+    const pokemons = await Promise.all(Array.from(ids).map(id => fetchPokemon(id)));
 
     GAME_STATE.currentEncounter = pokemons;
+    GAME_STATE.selectedPokemonIndex = 0; // Seleccionar el primero por defecto
     renderEncounters();
+    updateUI();
 }
 
-function attemptCapture(pokemonIndex, ballType) {
+function selectPokemon(index) {
+    GAME_STATE.selectedPokemonIndex = index;
+    renderEncounters();
+} function attemptCapture(ballType) {
     if (GAME_STATE.inventory[ballType] <= 0) return;
 
+    const pokemonIndex = GAME_STATE.selectedPokemonIndex;
     const pokemon = GAME_STATE.currentEncounter[pokemonIndex];
     GAME_STATE.inventory[ballType]--;
 
-    // Animación de captura (placeholder lógica)
-    const card = document.querySelectorAll('.pokemon-card')[pokemonIndex];
+    // Animación de captura
+    const cards = document.querySelectorAll('.pokemon-card');
+    const card = cards[pokemonIndex];
     card.classList.add('shaking');
+
+    // Deshabilitar botones durante la captura
+    updateUI(true);
 
     setTimeout(() => {
         card.classList.remove('shaking');
@@ -218,33 +233,31 @@ function renderEncounters() {
 
     GAME_STATE.currentEncounter.forEach((poke, index) => {
         const isAlreadyCaught = GAME_STATE.collection.some(p => p.id === poke.id);
+        const isSelected = GAME_STATE.selectedPokemonIndex === index;
         const card = document.createElement('div');
-        card.className = `pokemon-card ${!isAlreadyCaught ? 'new' : ''}`;
+        card.className = `pokemon-card ${!isAlreadyCaught ? 'new' : ''} ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectPokemon(index);
 
         card.innerHTML = `
             <img src="${poke.isShiny ? poke.shinySprite : poke.sprite}" class="${poke.isShiny ? 'shiny-effect' : ''}">
             <p class="pokemon-name">${poke.isShiny ? '✨ ' : ''}${poke.name}</p>
-            <p class="capture-rate">Nivel: ${poke.level}</p>
-            <div class="capture-buttons">
-                ${Object.keys(GAME_STATE.inventory).map(ball => `
-                    <button class="btn-capture" onclick="attemptCapture(${index}, '${ball}')" ${GAME_STATE.inventory[ball] <= 0 ? 'disabled' : ''}>
-                        <img src="${BALL_SPRITES[ball]}">
-                        ${GAME_STATE.inventory[ball]}
-                    </button>
-                `).join('')}
-            </div>
+            <p class="pokemon-level">Nivel: ${poke.level}</p>
         `;
         grid.appendChild(card);
     });
 }
 
-function updateUI() {
+function updateUI(isCapturing = false) {
     const invElement = document.getElementById('inventory');
     invElement.innerHTML = Object.entries(GAME_STATE.inventory).map(([ball, count]) => `
-        <div class="ball-count">
+        <button class="ball-action ${count <= 0 || isCapturing ? 'disabled' : ''}" 
+                onclick="attemptCapture('${ball}')" 
+                ${count <= 0 || isCapturing ? 'disabled' : ''}>
             <img src="${BALL_SPRITES[ball]}">
-            <span>${count}</span>
-        </div>
+            <div class="ball-info">
+                <span class="count">${count}</span>
+            </div>
+        </button>
     `).join('');
 
     renderEncounters();
@@ -306,6 +319,5 @@ document.getElementById('btn-skip').onclick = () => {
 };
 
 // Init
-updateUI();
 startNewEncounter();
 checkInventory();

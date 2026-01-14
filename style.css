@@ -69,23 +69,58 @@ header {
     color: var(--primary-color);
 }
 
+.inventory-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
 .inventory {
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.ball-count {
+.ball-action {
+    background: none;
+    border: none;
+    cursor: pointer;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 5px 12px;
-    border-radius: 20px;
+    gap: 5px;
+    transition: transform 0.2s, filter 0.2s;
+    position: relative;
 }
 
-.ball-count img {
-    width: 24px;
-    height: 24px;
+.ball-action:hover:not(:disabled) {
+    transform: translateY(-5px) scale(1.1);
+}
+
+.ball-action:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.ball-action.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.ball-action img {
+    width: 45px;
+    height: 45px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.ball-info {
+    font-weight: 600;
+    color: var(--text-white);
+    font-size: 0.9rem;
 }
 
 .actions {
@@ -138,13 +173,21 @@ header {
     padding: 25px;
     text-align: center;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
 }
 
 .pokemon-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.pokemon-card.selected {
     border-color: var(--primary-color);
+    background: rgba(255, 83, 80, 0.05);
+    box-shadow: 0 0 20px rgba(255, 83, 80, 0.2);
+    transform: scale(1.02);
 }
 
 .pokemon-card.new::before {
@@ -162,57 +205,31 @@ header {
 }
 
 .pokemon-card img {
-    width: 150px;
-    height: 150px;
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    width: 180px;
+    height: 180px;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.4));
+    transition: transform 0.3s;
+}
+
+.pokemon-card:hover img {
+    transform: scale(1.05);
 }
 
 .pokemon-name {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+    font-weight: 600;
     text-transform: capitalize;
-    margin: 15px 0;
-}
-
-.capture-rate {
-    font-size: 0.9rem;
-    color: #aaa;
-    margin-bottom: 20px;
-}
-
-.capture-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.btn-capture {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0 5px 0;
     color: white;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    transition: all 0.2s;
 }
 
-.btn-capture:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+.pokemon-level {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 5px;
 }
 
-.btn-capture:hover:not(:disabled) {
-    background: var(--primary-color);
-}
 
-.btn-capture img {
-    width: 20px;
-    height: 20px;
-}
 
 /* Modal */
 .modal {

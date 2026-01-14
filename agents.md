@@ -1,6 +1,6 @@
-# PokéGacha - Documentación del Proyecto para Agentes
+# PokéJourney - Documentación del Proyecto para Agentes
 
-Este archivo contiene la información técnica, de diseño y funcional necesaria para que cualquier agente de IA comprenda y colabore en el proyecto **PokéGacha**.
+Este archivo contiene la información técnica, de diseño y funcional necesaria para que cualquier agente de IA comprenda y colabore en el proyecto **PokéJourney**.
 
 ## 🎯 Objetivo del Proyecto
 Crear un juego de gacha/coleccionismo basado en la **PokeAPI**, donde el usuario encuentra Pokémon aleatorios, gestiona un inventario de Poké Balls y expande su colección con elementos de progresión y rareza (Shiny).

@@ -15,7 +15,7 @@ def run_server():
     
     # Escucha en todas las interfaces (0.0.0.0) para permitir acceso externo
     with ReusableTCPServer(("0.0.0.0", PORT), Handler) as httpd:
-        print(f"\n🚀 Servidor PokeGacha iniciado!")
+        print(f"\n🚀 Servidor PokeJourney iniciado!")
         print(f"📡 Local: http://localhost:{PORT}")
         print(f"🌍 Externo/Red: http://0.0.0.0:{PORT}")
         print("-" * 40)

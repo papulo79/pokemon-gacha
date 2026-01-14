@@ -1,6 +1,6 @@
-# 🔴 PokéGacha - Captura y Colecciona
+# 🔴 PokéJourney - Captura y Colecciona
 
-¡Bienvenido a **PokéGacha**! Un juego web donde puedes capturar Pokémon, gestionar tus Poké Balls y completar tu propia PokéDex utilizando datos reales de la [PokeAPI](https://pokeapi.co/).
+¡Bienvenido a **PokéJourney**! Un juego web donde puedes capturar Pokémon, gestionar tus Poké Balls y completar tu propia PokéDex utilizando datos reales de la [PokeAPI](https://pokeapi.co/).
 
 ## 🚀 Cómo Iniciar el Juego
 
