@@ -98,19 +98,31 @@ function selectPokemon(index) {
     const pokemon = GAME_STATE.currentEncounter[pokemonIndex];
     GAME_STATE.inventory[ballType]--;
 
-    // Animación de captura
+    // Deshabilitar botones durante la captura y RE-RENDERIZAR (para el estado visual)
+    updateUI(true);
+
+    // Obtener la ficha ACTUALIZADA tras el render
     const cards = document.querySelectorAll('.pokemon-card');
     const card = cards[pokemonIndex];
     card.classList.add('shaking');
 
-    // Deshabilitar botones durante la captura
-    updateUI(true);
+    // Burbuja de Ratio de Captura
+    const successChance = (pokemon.captureRate * BALL_POWER[ballType]) / 255;
+    const successPercentage = Math.min(100, Math.floor(successChance * 100));
+
+    const bubble = document.createElement('div');
+    bubble.className = 'ratio-bubble';
+    bubble.innerText = `${successPercentage}% Prob.`;
+    card.appendChild(bubble);
+
+    // Auto-eliminar burbuja
+    setTimeout(() => bubble.remove(), 1500);
 
     setTimeout(() => {
         card.classList.remove('shaking');
 
         // Lógica de éxito: (BaseCaptureRate * BallModifier) / 255
-        const successChance = (pokemon.captureRate * BALL_POWER[ballType]) / 255;
+        // const successChance = (pokemon.captureRate * BALL_POWER[ballType]) / 255; // Ya calculado arriba
         const roll = Math.random();
 
         if (roll < successChance || ballType === 'masterball') {
