@@ -39,4 +39,39 @@ Puedes simplemente hacer doble clic en el archivo `index.html` para abrirlo en t
 - `serve.py`: Script para ejecutar el servidor local.
 
 ---
+
+## 🔧 Servicio Systemd
+
+El juego está configurado como un servicio systemd (`pokejourney.service`) para que se inicie automáticamente al arrancar el sistema.
+
+### Comandos de Gestión del Servicio
+
+```bash
+# Ver el estado del servicio
+sudo systemctl status pokejourney.service
+
+# Iniciar el servicio
+sudo systemctl start pokejourney.service
+
+# Detener el servicio
+sudo systemctl stop pokejourney.service
+
+# Reiniciar el servicio
+sudo systemctl restart pokejourney.service
+
+# Ver los logs del servicio en tiempo real
+sudo journalctl -u pokejourney.service -f
+
+# Habilitar/deshabilitar el inicio automático
+sudo systemctl enable pokejourney.service
+sudo systemctl disable pokejourney.service
+```
+
+### Configuración
+- **Puerto:** 9026
+- **Escucha:** En todas las interfaces (0.0.0.0)
+- **Acceso:** `http://localhost:9026` (local) o `http://[tu-ip]:9026` (externo)
+- **Firewall:** Puerto 9026 abierto
+
+---
 *¡Buena suerte, Entrenador!*
