@@ -10,8 +10,10 @@ class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
 
 def run_server():
-    # Cambia al directorio del script para asegurar que sirve los archivos correctos
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    # Cambia al directorio public para servir los archivos estáticos
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    public_dir = os.path.join(script_dir, '..', 'public')
+    os.chdir(public_dir)
     
     # Escucha en todas las interfaces (0.0.0.0) para permitir acceso externo
     with ReusableTCPServer(("0.0.0.0", PORT), Handler) as httpd:
