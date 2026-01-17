@@ -26,6 +26,9 @@ const BALL_SPRITES = {
     masterball: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png'
 };
 
+const minigameEngine = new MinigameEngine();
+const timingCircleMinigame = new TimingCircleMinigame(minigameEngine);
+
 // --- API Service ---
 async function fetchPokemon(id) {
     try {
@@ -91,49 +94,32 @@ async function startNewEncounter() {
 function selectPokemon(index) {
     GAME_STATE.selectedPokemonIndex = index;
     renderEncounters();
-} function attemptCapture(ballType) {
+}function attemptCapture(ballType) {
     if (GAME_STATE.inventory[ballType] <= 0) return;
 
     const pokemonIndex = GAME_STATE.selectedPokemonIndex;
     const pokemon = GAME_STATE.currentEncounter[pokemonIndex];
     GAME_STATE.inventory[ballType]--;
 
-    // Deshabilitar botones durante la captura y RE-RENDERIZAR (para el estado visual)
     updateUI(true);
 
-    // Obtener la ficha ACTUALIZADA tras el render
-    const cards = document.querySelectorAll('.pokemon-card');
-    const card = cards[pokemonIndex];
-    card.classList.add('shaking');
+    timingCircleMinigame.start(
+        pokemon,
+        ballType,
+        () => onMinigameSuccess(pokemon),
+        () => onMinigameFail(pokemon, ballType)
+    );
+}
 
-    // Burbuja de Ratio de Captura
-    const successChance = (pokemon.captureRate * BALL_POWER[ballType]) / 255;
-    const successPercentage = Math.min(100, Math.floor(successChance * 100));
+function onMinigameSuccess(pokemon) {
+    onCaptureSuccess(pokemon);
+    startNewEncounter();
+}
 
-    const bubble = document.createElement('div');
-    bubble.className = 'ratio-bubble';
-    bubble.innerText = `${successPercentage}% Prob.`;
-    card.appendChild(bubble);
-
-    // Auto-eliminar burbuja
-    setTimeout(() => bubble.remove(), 1500);
-
-    setTimeout(() => {
-        card.classList.remove('shaking');
-
-        // Lógica de éxito: (BaseCaptureRate * BallModifier) / 255
-        // const successChance = (pokemon.captureRate * BALL_POWER[ballType]) / 255; // Ya calculado arriba
-        const roll = Math.random();
-
-        if (roll < successChance || ballType === 'masterball') {
-            onCaptureSuccess(pokemon);
-            startNewEncounter();
-        } else {
-            showNotification(`¡Rayos! ${pokemon.name} se escapó de la ${ballType}.`);
-            updateUI();
-            checkInventory();
-        }
-    }, 1500);
+function onMinigameFail(pokemon, ballType) {
+    showNotification(`¡Rayos! ${pokemon.name} se escapó de la ${ballType}.`);
+    updateUI();
+    checkInventory();
 }
 
 function checkInventory() {

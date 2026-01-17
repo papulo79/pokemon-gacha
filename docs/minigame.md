@@ -1,115 +1,152 @@
- # Minijuego de Captura - PokéJourney
+# Minijuego de Captura - PokéJourney
 
 ## 🎯 Objetivo Principal
 Reemplazar el sistema de captura basado en probabilidad por un **minijuego interactivo** donde el usuario debe completar una mecánica para atrapar al Pokémon.
 
-## 📋 Requisitos Funcionales
+## ✅ Estado Actual
+**IMPLEMENTADO** - Motor de minijuegos funcionando con primera mecánica (Timing Circle)
 
-### 1. Activación del Minijuego
-- Se activa cuando el usuario selecciona una Poké Ball y hace clic en un Pokémon
-- El minijuego aparece en un **modal/overlay** que cubre la pantalla
-- Muestra el Pokémon seleccionado (sprite, nombre, nivel)
+## 📁 Archivos del Sistema de Minijuegos
 
-### 2. Mecánicas del Minijuego (Por Definir)
-*[Aquí definiremos las mecánicas específicas]*
+```
+public/
+├── css/
+│   └── minigames.css          # Estilos específicos para minijuegos
+├── js/
+│   └── minigames/
+│       ├── engine.js          # Motor base de minijuegos
+│       └── timing-circle.js    # Implementación Timing Circle
+└── index.html                  # Incluye scripts del sistema
 
-### 3. Factores que Afectan la Dificultad
-- **Tipo de Poké Ball**: Master Ball debería ser automática o muy fácil
-- **Nivel del Pokémon**: Pokémon de mayor nivel = más difícil
-- **Ratio de captura base**: Pokémon con ratio bajo = más difícil
-- **Shiny**: Posiblemente más difícil para mantener la exclusividad
+js/
+└── script.js                   # Integración con sistema de captura
+```
 
-### 4. Resultados Posibles
-- **Captura exitosa**: Se añade a la colección, se dan recompensas
-- **Fallo**: El Pokémon se escapa, se pierde la Poké Ball usada
-- **Oportunidad múltiple**: ¿Tiradas múltiples o un solo intento?
+## 🔧 Motor de Minijuegos (engine.js)
 
-## 💡 Ideas de Mecánicas (Brainstorming)
+### Clase MinigameEngine
+Responsable de gestionar el modal del minijuego y el estado del juego.
 
-### Opción A: Timing Circle
-- Un círculo que se contrae y expande
-- El usuario debe hacer clic en el momento exacto cuando el círculo esté en una zona verde
-- Diferentes Poké Balls tienen tamaños de zona verde diferentes
+#### Métodos Principales:
+- `start(pokemon, ballType, onSuccess, onFail)` - Inicia el minijuego
+- `setupUI()` - Configura el UI con datos del Pokémon y Poké Ball
+- `setTimer(seconds)` - Inicia el timer visual
+- `end(success)` - Finaliza el minijuego y ejecuta callback
 
-### Opción B: QTE (Quick Time Event)
-- Secuencia de botones que aparecen en pantalla (arriba, abajo, izquierda, derecha)
-- El usuario debe presionarlos en orden y tiempo
-- Más niveles = más botones en la secuencia
+#### Modal del Minijuego:
+- Header: Nombre y nivel del Pokémon, sprite de la Poké Ball
+- Display: Sprite grande del Pokémon (con efecto shiny si aplica)
+- Área de juego: Contenedor dinámico para cada mecánica
+- Timer: Barra de progreso y texto con tiempo restante
 
-### Opción C: Drag & Catch
-- El usuario debe arrastrar la Poké Ball al Pokémon en movimiento
-- El Pokémon se mueve aleatoriamente, velocidad según nivel
-- Tienes X segundos para atraparlo
+## 🎮 Timing Circle (timing-circle.js)
 
-### Opción D: Click Precision
-- Objetivos aparecen en el cuerpo del Pokémon
-- El usuario debe hacer clic en ellos antes de que desaparezcan
-- Aparecen más rápido según dificultad
+### Mecánica Implementada:
+Un círculo que se expande y contrae. El usuario debe hacer clic cuando el círculo coincida con la zona verde.
 
-### Opción E: Rhythm/Timing
-- Barra de ritmo que se mueve
-- Presionar espacio en el momento exacto
-- Master Ball: ritmo lento, Poké Ball: ritmo rápido
+### Factores de Dificultad:
 
-## 🔧 Consideraciones Técnicas
+#### Tamaño de la Zona Verde:
+- **Master Ball**: 60% de base
+- **Ultra Ball**: 40% de base
+- **Super Ball**: 30% de base
+- **Poké Ball**: 20% de base
 
-### UI/UX
-- Modal centrado que bloquea el juego principal
-- Animaciones suaves de entrada/salida
-- Feedback visual claro (éxito/fallo)
-- Timer visible si aplica
+Ajustado por:
+- Nivel del Pokémon (mayor nivel = zona más pequeña)
+- Ratio de captura (menor ratio = zona más pequeña)
 
-### Estado del Juego
-- Pausar el juego principal durante el minijuego
-- Mantener el Pokémon seleccionado en memoria
-- No modificar `GAME_STATE` hasta resultado final
+#### Tiempo Límite:
+- **Master Ball**: 15s de base
+- **Ultra Ball**: 12s de base
+- **Super Ball**: 10s de base
+- **Poké Ball**: 8s de base
 
-### Persistencia
-- El minijuego no requiere persistencia (es temporal)
-- Solo se guarda el resultado final (captura o fallo)
+Ajustado por dificultad del Pokémon
 
-## 📊 Balance de Dificultad (Por Definir)
+### Umbral de Éxito:
+El porcentaje de superposición del círculo con la zona verde debe ser:
+- **Master Ball**: Automático (siempre éxito)
+- **Ultra Ball**: ≥ 40%
+- **Super Ball**: ≥ 55%
+- **Poké Ball**: ≥ 70%
 
-| Factor | Fácil | Medio | Difícil |
-|--------|-------|-------|---------|
-| Master Ball | Automático | - | - |
-| Ultra Ball | - | - | - |
-| Super Ball | - | - | - |
-| Poké Ball | - | - | - |
+## 📊 Balance de Dificultad Implementado
 
-## 🎨 Elementos Visuales Necesarios
-- Modal overlay oscuro
-- Sprite del Pokémon grande
-- UI del minijuego (según mecánica elegida)
-- Animaciones de la Poké Ball lanzándose
-- Partículas/confeti para captura exitosa
-- Animación de escape para fallo
+| Poké Ball | Zona Verde (Base) | Timer (Base) | Umbral Éxito |
+|------------|------------------|--------------|--------------|
+| Master Ball | 60% | 15s | Automático |
+| Ultra Ball | 40% | 12s | ≥ 40% |
+| Super Ball | 30% | 10s | ≥ 55% |
+| Poké Ball | 20% | 8s | ≥ 70% |
 
-## 🚀 Pasos de Implementación (Propuesto)
+## 🎨 Elementos Visuales Implementados:
+- ✅ Modal oscuro con backdrop blur
+- ✅ Sprite grande del Pokémon (200px)
+- ✅ Efecto shiny (brillo dorado + animación)
+- ✅ Círculo animado que expande/contrae
+- ✅ Zona verde clara con gradientes
+- ✅ Timer con barra de progreso
+- ✅ Animación de bounce en Poké Ball
+- ✅ Animación fadeIn/scaleIn del modal
+- ✅ Hover effects y active states
+- ✅ Responsive design para móvil
 
-1. **Fase 1**: Definir mecánica exacta del minijuego
-2. **Fase 2**: Crear estructura HTML del modal
-3. **Fase 3**: Implementar lógica del minijuego en JS
-4. **Fase 4**: Añadir estilos CSS
-5. **Fase 5**: Integrar con sistema de captura existente
-6. **Fase 6**: Balance de dificultades
-7. **Fase 7**: Testing y pulido
+## 🔄 Integración con el Juego Principal
 
-## ❓ Preguntas por Resolver
+### Flujo de Captura:
+1. Usuario selecciona Poké Ball y Pokémon
+2. `attemptCapture(ballType)` se ejecuta
+3. Se descuenta la Poké Ball del inventario
+4. Se inicia el minijuego con `timingCircleMinigame.start()`
+5. Si éxito → `onMinigameSuccess(pokemon)` → `onCaptureSuccess()` → nuevo encuentro
+6. Si fallo → `onMinigameFail()` → notificación de escape → checkInventory
 
-1. **¿Cuál mecánica prefieres?** (Opciones A-E o sugerencia propia)
-Quiero un motor que permita ir añadiendo mecánicas diferentes.
-Comenzaremos por la opción A.
+## ❓ Preguntas por Resolver (Decisiones Tomadas)
+
+1. **¿Cuál mecánica prefieres?** 
+   ✅ Opción A: Timing Circle (IMPLEMENTADO)
+   Motor preparado para añadir mecánicas adicionales
+
 2. **¿Un solo intento o múltiples oportunidades?**
-Solo un intento.
+   ✅ Solo un intento
+
 3. **¿Timer o sin límite de tiempo?**
-Con límite de tiempo, que esté relacionado con la dificultad de la captura.
+   ✅ Con límite de tiempo, relacionado con la dificultad (5-15s según Poké Ball y Pokémon)
+
 4. **¿El usuario puede usar diferentes Poké Balls durante el minijuego?**
-No, la Poké Ball se elige al inicio y definirá el nivel de dificultad del minijuego.
+   ✅ No, la Poké Ball se elige al inicio y define la dificultad
+
 5. **¿Animación de lanzamiento de la bola?**
-Sí, con una animación suave y agradable al usuario.
+   ✅ Animación de bounce en la Poké Ball en el header
+
 6. **¿Partículas para captura exitosa?**
-Sí, con una animación suave y agradable al usuario.
+   ✅ Confeti ya implementado en el sistema principal, se ejecuta tras captura
+
+## 🚀 Pasos Siguientes (Mecánicas Futuras)
+
+El motor está diseñado para ser extensible. Para añadir nuevas mecánicas:
+
+1. Crear nueva clase que implemente la lógica
+2. Usar `MinigameEngine.start()` para iniciar
+3. Crear UI en `#minigame-area`
+4. Implementar detección de éxito/fallo
+5. Ejecutar `engine.end(true/false)` al terminar
+
+### Ejemplo de Nueva Mecánica:
+```javascript
+class NewMinigame {
+    constructor(engine) {
+        this.engine = engine;
+    }
+
+    start(pokemon, ballType, onSuccess, onFail) {
+        this.engine.start(pokemon, ballType, onSuccess, onFail);
+        // Implementación específica
+    }
+}
+```
+
 ---
-*Documento creado para planificación del minijuego de captura*
-*Última actualización: 17 enero 2026*
+*Documento actualizado: 17 enero 2026*
+*Sistema de minijuegos implementado y funcional*
