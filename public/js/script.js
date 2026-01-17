@@ -117,7 +117,7 @@ function onMinigameSuccess(pokemon) {
 }
 
 function onMinigameFail(pokemon, ballType) {
-    showNotification(`¡Rayos! ${pokemon.name} se escapó de la ${ballType}.`);
+    showNotification(`¡Rayos! ${pokemon.name} se escapó de la ${ballType}.`, 'failure');
     updateUI();
     checkInventory();
 }
@@ -185,7 +185,7 @@ function restartGame() {
 }
 
 function onCaptureSuccess(pokemon) {
-    showNotification(`¡Felicidades! Capturaste a ${pokemon.name.toUpperCase()}!`);
+    showNotification(`¡Felicidades! Capturaste a ${pokemon.name.toUpperCase()}!`, 'success');
 
     // Añadir al registro de la partida actual
     GAME_STATE.currentRunIds.push(pokemon.id);
@@ -261,10 +261,10 @@ function updateUI(isCapturing = false) {
     renderEncounters();
 }
 
-function showNotification(text) {
+function showNotification(text, type = 'info') {
     const notif = document.getElementById('notifications');
     const div = document.createElement('div');
-    div.className = 'notification';
+    div.className = `notification ${type}`;
     div.innerText = text;
     notif.appendChild(div);
     setTimeout(() => div.remove(), 3000);
