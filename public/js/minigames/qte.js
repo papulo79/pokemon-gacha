@@ -112,8 +112,11 @@ class QTEMinigame {
         const inner = document.getElementById('qte-sequence-inner');
         const keys = document.querySelectorAll('.qte-key');
 
-        const offset = -this.currentIndex * 75;
-        inner.style.transform = `translateX(calc(50% - 30px + ${offset}px))`;
+        const firstKey = keys[0];
+        const keyWidth = firstKey.offsetWidth;
+        const gap = 15;
+        const offset = -this.currentIndex * (keyWidth + gap);
+        inner.style.transform = `translateX(calc(50% - ${keyWidth / 2}px + ${offset}px))`;
 
         keys.forEach((key, i) => {
             key.classList.remove('past', 'current', 'next', 'success');
