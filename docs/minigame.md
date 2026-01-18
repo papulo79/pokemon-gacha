@@ -39,10 +39,59 @@ Responsable de gestionar el modal del minijuego y el estado del juego.
 - Área de juego: Contenedor dinámico para cada mecánica
 - Timer: Barra de progreso y texto con tiempo restante
 
+## 🎮 Opciones de Minijuegos (Brainstorming)
+
+### ✅ Opción A: Timing Circle (IMPLEMENTADO)
+Un círculo que se expande y contrae. El usuario debe hacer clic cuando el círculo coincida con la zona verde.
+
+**Estado**: Implementado y funcional
+
+**Detalles de implementación**:
+- El círculo oscila entre 10% y 90% de tamaño
+- Fórmula: `50 + (Math.sin(progress * Math.PI * 2) * 40)`
+- Ciclo de duración: 2 segundos
+- Detección basada en superposición del círculo con zona verde
+
+### ⏳ Opción B: QTE (Quick Time Event) - Pendiente
+Secuencia de botones que aparecen en pantalla (arriba, abajo, izquierda, derecha). El usuario debe presionarlos en orden y tiempo.
+
+**Plan de implementación**:
+- Más niveles = más botones en la secuencia
+- Mayor dificultad = menos tiempo entre botones
+- Teclas: flechas del teclado o botones en pantalla (móvil)
+
+### ⏳ Opción C: Drag & Catch - Pendiente
+El usuario debe arrastrar la Poké Ball al Pokémon en movimiento.
+
+**Plan de implementación**:
+- El Pokémon se mueve aleatoriamente, velocidad según nivel
+- Tienes X segundos para atraparlo
+- Detectar colisión entre Poké Ball y Pokémon
+- Implementar touch events para móvil
+
+### ⏳ Opción D: Click Precision - Pendiente
+Objetivos aparecen en el cuerpo del Pokémon. El usuario debe hacer clic en ellos antes de que desaparezcan.
+
+**Plan de implementación**:
+- Aparecen más objetivos según dificultad
+- Desaparecen más rápido según Poké Ball
+- Objetivos posicionados en sprite del Pokémon
+- Click/tap para eliminar objetivos
+
+### ⏳ Opción E: Rhythm/Timing - Pendiente
+Barra de ritmo que se mueve. Presionar espacio o botón en el momento exacto.
+
+**Plan de implementación**:
+- Barra que se mueve de lado a lado
+- Zona objetivo en el centro
+- Master Ball: ritmo lento, Poké Ball: ritmo rápido
+- Feedback visual de timing (perfecto, bueno, malo)
+
+---
+
 ## 🎮 Timing Circle (timing-circle.js)
 
 ### Mecánica Implementada:
-Un círculo que se expande y contrae. El usuario debe hacer clic cuando el círculo coincida con la zona verde.
 
 ### Factores de Dificultad:
 
@@ -70,6 +119,13 @@ El porcentaje de superposición del círculo con la zona verde debe ser:
 - **Ultra Ball**: ≥ 40%
 - **Super Ball**: ≥ 55%
 - **Poké Ball**: ≥ 70%
+
+### ⚠️ Bug Fix: Cálculo del Círculo
+**Problema**: Fórmula inicial `100 - (Math.sin(progress * Math.PI * 2) * 50)` producía círculos entre 50-150%, imposibilitando captura con Poké Ball (zona verde 20%).
+
+**Solución**: Fórmula corregida `50 + (Math.sin(progress * Math.PI * 2) * 40)` produce círculos entre 10-90%, permitiendo captura con cualquier Poké Ball.
+
+**Importante**: Tanto `animate()` como `checkSuccess()` deben usar la misma fórmula para consistencia visual.
 
 ## 📊 Balance de Dificultad Implementado
 
@@ -123,6 +179,42 @@ El porcentaje de superposición del círculo con la zona verde debe ser:
 6. **¿Partículas para captura exitosa?**
    ✅ Confeti ya implementado en el sistema principal, se ejecuta tras captura
 
+## 🚀 Roadmap de Mecánicas Futuras
+
+### Prioridad Sugerida:
+1. **Opción D: Click Precision** - Simple de implementar, buen balance de dificultad
+2. **Opción B: QTE** - Popular en juegos, familiar para jugadores
+3. **Opción C: Drag & Catch** - Más interactivo, ideal para móvil
+4. **Opción E: Rhythm/Timing** - Más complejo, requiere mayor desarrollo
+
+### Implementación Mínima Requerida:
+Para cada mecánica se necesita:
+- Clase JavaScript en `public/js/minigames/`
+- CSS específico en `public/css/minigames.css`
+- Integración en `public/js/script.js`
+- Actualización de documentación en este archivo
+
+### Sistema de Selección Futura (Opcional):
+Permitir al jugador elegir mecánica en configuración:
+```javascript
+const MINIGAME_TYPE = localStorage.getItem('minigameType') || 'timing-circle';
+```
+
+Luego instanciar la mecánica correspondiente:
+```javascript
+const minigames = {
+    'timing-circle': new TimingCircleMinigame(engine),
+    'qte': new QTEMinigame(engine),
+    'drag-catch': new DragCatchMinigame(engine),
+    'click-precision': new ClickPrecisionMinigame(engine),
+    'rhythm': new RhythmMinigame(engine)
+};
+
+minigames[MINIGAME_TYPE].start(pokemon, ballType, onSuccess, onFail);
+```
+
+---
+
 ## 🚀 Pasos Siguientes (Mecánicas Futuras)
 
 El motor está diseñado para ser extensible. Para añadir nuevas mecánicas:
@@ -147,6 +239,13 @@ class NewMinigame {
 }
 ```
 
+## 📝 Historial de Cambios
+
+- **17 enero 2026**: Sistema de minijuegos implementado con Timing Circle
+- **17 enero 2026**: Bug fix en cálculo del círculo (50-150% → 10-90%)
+- **17 enero 2026**: Documentación actualizada con todas las opciones de mecánicas
+
 ---
 *Documento actualizado: 17 enero 2026*
 *Sistema de minijuegos implementado y funcional*
+*Opciones futuras documentadas para implementación*
