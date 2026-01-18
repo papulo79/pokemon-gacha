@@ -1,9 +1,30 @@
 import http.server
 import socketserver
 import os
+import time
 
 PORT = 9026
-Handler = http.server.SimpleHTTPRequestHandler
+
+class CacheControlHandler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def end_headers(self):
+        # Añadir headers de cache control
+        if self.path.endswith(('.css', '.js')):
+            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
+        elif self.path.endswith(('.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg')):
+            # Para imágenes, cache más larga
+            self.send_header('Cache-Control', 'public, max-age=86400')
+        else:
+            # Para HTML, cache corta
+            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
+        
+        super().end_headers()
 
 class ReusableTCPServer(socketserver.TCPServer):
     """Permite reutilizar el puerto inmediatamente después de cerrar el servidor."""
@@ -16,7 +37,7 @@ def run_server():
     os.chdir(public_dir)
     
     # Escucha en todas las interfaces (0.0.0.0) para permitir acceso externo
-    with ReusableTCPServer(("0.0.0.0", PORT), Handler) as httpd:
+    with ReusableTCPServer(("0.0.0.0", PORT), CacheControlHandler) as httpd:
         print(f"\n🚀 Servidor PokeJourney iniciado!")
         print(f"📡 Local: http://localhost:{PORT}")
         print(f"🌍 Externo/Red: http://0.0.0.0:{PORT}")
