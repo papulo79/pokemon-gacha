@@ -28,6 +28,7 @@ const BALL_SPRITES = {
 
 const minigameEngine = new MinigameEngine();
 const timingCircleMinigame = new TimingCircleMinigame(minigameEngine);
+const qteMinigame = new QTEMinigame(minigameEngine);
 
 // --- API Service ---
 async function fetchPokemon(id) {
@@ -94,7 +95,7 @@ async function startNewEncounter() {
 function selectPokemon(index) {
     GAME_STATE.selectedPokemonIndex = index;
     renderEncounters();
-}function attemptCapture(ballType) {
+} function attemptCapture(ballType) {
     if (GAME_STATE.inventory[ballType] <= 0) return;
 
     const pokemonIndex = GAME_STATE.selectedPokemonIndex;
@@ -103,7 +104,11 @@ function selectPokemon(index) {
 
     updateUI(true);
 
-    timingCircleMinigame.start(
+    // Selección aleatoria del minijuego
+    const randomSeed = Math.random();
+    const activeMinigame = randomSeed < 0.5 ? timingCircleMinigame : qteMinigame;
+
+    activeMinigame.start(
         pokemon,
         ballType,
         () => onMinigameSuccess(pokemon),

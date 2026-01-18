@@ -27,10 +27,12 @@ Existen 4 tipos de bolas con diferentes multiplicadores de éxito:
 | Ultra Ball | 2.0 | Alta probabilidad de éxito. |
 | Master Ball| 255 | Captura garantizada. |
 
-### 3. Lógica de Captura
-La probabilidad de éxito se calcula mediante:
-`Probabilidad = (BaseCaptureRate * BallPower) / 255`
-*Si el resultado es > 1 o se usa una Master Ball, la captura es automática.*
+### 3. Lógica de Captura (Minijuegos)
+La captura ya no es automática por probabilidad. En su lugar, se activa un **sistema de minijuegos** gestionado por `MinigameEngine`:
+- **Timing Circle**: Precisión con círculos.
+- **QTE**: Secuencias de botones (flechas).
+- **Dificultad**: La Poké Ball y el nivel del Pokémon determinan el tiempo disponible y la complejidad del minijuego.
+- **Master Ball**: Mantiene su efecto de captura automática (el minijuego se completa exitosamente al primer clic/tecla).
 
 ### 4. Sistema de Recompensas
 Tras cada captura exitosa:
@@ -45,9 +47,10 @@ Tras cada captura exitosa:
 - **Encuentro con Pokémon ya capturado**: La probabilidad aumenta al **15%** para incentivar la repetición y el coleccionismo de versiones especiales.
 
 ## 📂 Estructura de Archivos
-- `index.html`: Estructura del DOM, contenedores de inventario, rejilla de Pokémon y modal de colección.
-- `style.css`: Sistema de diseño, variables de color, animaciones de captura (`shake`) y efectos Shiny.
-- `script.js`: Lógica central, `GAME_STATE`, comunicación con la API y manejo de eventos.
+- `index.html`: Estructura del DOM, contenedores de inventario, y scripts base.
+- `public/js/minigames/`: Motor (`engine.js`) y mecánicas individuales.
+- `public/css/minigames.css`: Estilos del modal y mecánicas de captura.
+- `script.js`: Lógica central, `GAME_STATE`, y comunicación con la API.
 
 ## 📝 Reglas de Interacción para Agentes
 - **Preservar el Estado**: No modificar la estructura de `GAME_STATE` sin actualizar la lógica de guardado en `localStorage`.
